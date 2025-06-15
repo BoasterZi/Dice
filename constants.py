@@ -35,8 +35,8 @@ HARDCODED_ADMINS = [
 # Replace with the actual Telegram Group IDs where you want the bot to run.
 # You can get a group's ID by forwarding a message from the group to @userinfobot
 ALLOWED_GROUP_IDS = [
-    -1002689980361,
-    -4859500151,
+   
+   -4845472581,
 ]
 
 
