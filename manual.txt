@@ -1,0 +1,2 @@
+Constants.py ကိုဖွင့် အဲ့ထဲမှာ hardcoded admins နေရာမှာ ကိုယ့် id ထည့် allowed_group_ids မှာ run စေချင်တယ် group id ထည့်
+စ run မယ်ဆိုရင် pip install -r requirements.txt
