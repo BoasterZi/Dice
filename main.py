@@ -23,7 +23,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Define the custom reply keyboard
+# Define the custom reply 
 # We use a 2D list to represent rows and columns of buttons.
 custom_keyboard = [
     [KeyboardButton("ငွေထည့်မည်"), KeyboardButton("ငွေထုတ်မည်")],
@@ -45,7 +45,7 @@ def main():
     """
     # Initialize the Application with your bot token.
     # It's highly recommended to load the token from an environment variable for security.
-     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN") #for production
+    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN") #for production
     
     if not bot_token:
         logger.error("main: TELEGRAM_BOT_TOKEN environment variable not set!")
