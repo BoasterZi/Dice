@@ -65,7 +65,7 @@ def main():
     application.add_handler(CommandHandler("adjustscore", adjust_score))
     application.add_handler(CommandHandler("checkscore", check_user_score))
     application.add_handler(CommandHandler("refreshadmins", refresh_admins))
-    application.add_handler(CommandHandler("stopgame", stop_game)) # Added handler for stop_game
+    application.add_handler(CommandHandler("stop", stop_game)) # Added handler for stop_game
     
     # --- New: Command Handlers for Deposit and Withdraw ---
     application.add_handler(CommandHandler("deposit", deposit_points))

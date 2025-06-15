@@ -693,36 +693,39 @@ async def handle_bet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def show_score(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Displays the user's current points, total wins, and total losses.
-    """
     chat_id = update.effective_chat.id
-    # --- Group ID check ---
     if chat_id not in ALLOWED_GROUP_IDS:
-        logger.info(f"show_score: Ignoring command from disallowed chat ID: {chat_id}")
-        await update.message.reply_text(f"*Sorry, this bot is not authorized to run in this group ({chat_id}). Please add it to an allowed group.*", parse_mode="Markdown")
+        logger.info(f"show_score: Ignoring action from disallowed chat ID: {chat_id}")
+        if update.message:
+            await update.message.reply_text(f"*Sorry, this bot is not authorized to run in this group ({chat_id}). Please add it to an allowed group.*", parse_mode="Markdown")
         return
-    # --- END Group ID check ---
 
     user_id = update.effective_user.id
     username = update.effective_user.username or update.effective_user.first_name
     logger.info(f"show_score: User {user_id} ({username}) requested score in chat {chat_id}")
 
     chat_specific_data = get_chat_data_for_id(chat_id)
-    player_stats = chat_specific_data["player_stats"].get(user_id) # Use chat-specific player_stats
+    player_stats = chat_specific_data["player_stats"]
 
-    if player_stats:
-        # Use raw username for @mention, no escaping needed for Telegram
-        await update.message.reply_text(
-            f"*📊 @{username} ၏ အနိုင်အရှုံးနှင့် ဝင်ငွေထွက်ငွေပြဇယား🎟 💰 လက်ကျန်ငွေ*{player_stats['score']}* \n"
-            f"*✅ အနိုင်: {player_stats['wins']} ပွဲ | ❌ အရှုံး: {player_stats['losses']} ပွဲ*",
-            parse_mode="Markdown"
+    user_data = player_stats.get(user_id)
+
+    if user_data:
+        # Get and escape necessary data
+        escaped_username = escape_markdown_v2(user_data['username']) # Escape username
+        escaped_score = escape_markdown_v2(str(user_data['score'])) # Escape score (convert to string first)
+
+        score_message = (
+            f"*@{username}* ရဲ့ လက်ကျန်ငွေကတော့ *{escaped_score}* ကျပ် ဖြစ်ပါတယ်ရှင့်! 💰"
         )
     else:
-        await update.message.reply_text(
-            f"*ℹ️ ဒီ Chat ထဲမှာ ဂိမ်းတွေ မစရသေးဘူးရှင့်။ Admin တစ်ယောက်ကို ဂိမ်းစဖို့ ပြောပြီး ပိုက်ဆံတွေ အနိုင်ယူလိုက်ပါဦးနော်!*",
-            parse_mode="Markdown"
+        score_message = (
+            f"*@{username}* ရေ၊ မှတ်တမ်းမတွေ့ရသေးဘူးနော်။ ဂိမ်းစကစားပြီးမှ ပြန်စစ်ကြည့်ပါဦးရှင့်!"
         )
+
+    await (update.message or update.callback_query.message).reply_text(
+        score_message,
+        parse_mode="Markdown"
+    )
 
 async def show_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -1096,7 +1099,7 @@ async def check_user_score(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Use raw target_username_display for @mention, no escaping needed for Telegram
     await update.message.reply_text(
-        f"*👤 @{target_username_display}* ရဲ့ အချက်အလက်တွေ (ID: `{target_user_id}`) ကတော့:\n"
+        f"*👤 @{target_username_display}* *ရဲ့ အချက်အလက်တွေ (ID: `{target_user_id}`) ကတော့*:\n"
         f"* လက်ကျန်ငွေ: {player_stats['score']} မှတ်*\n"
         f"* ကစားခဲ့တဲ့ပွဲ: {total_games} ပွဲ*\n"
         f"* ✅ အနိုင်ပွဲ: {player_stats['wins']} ပွဲ*\n"
@@ -1255,7 +1258,7 @@ async def deposit_points(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await (update.message or update.callback_query.message).reply_text(
         "*🪙 ငွေထည့်ရန်:* 1 point = 1 kyat\n"
-        "ငွေဖြည့်သွင်းရန်အတွက် Admin ကို ဒီကနေ DM ပို့ပေးပါ 👉 @pussycat1204\n" # Username directly mentioned
+        "ငွေဖြည့်သွင်းရန်အတွက် Admin ကို ဒီကနေ DM ပို့ပေးပါ 👉 @BOASTER_OFFICIAL422sycat1204\n" # Username directly mentioned
         "ကျေးဇူးတင်ပါတယ်!",
         parse_mode="Markdown"
     )
@@ -1278,7 +1281,7 @@ async def withdraw_points(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await (update.message or update.callback_query.message).reply_text(
         "*💸 ငွေထုတ်ရန်:* 1 point = 1 kyat\n"
-        "ငွေထုတ်ယူရန်အတွက် Admin ကို ဒီကနေ DM ပို့ပေးပါ 👉 @pussycat1204\n" # Username directly mentioned
+        "ငွေထုတ်ယူရန်အတွက် Admin ကို ဒီကနေ DM ပို့ပေးပါ 👉 @BOASTER_OFFICIAL422\n" # Username directly mentioned
         "ကျေးဇူးတင်ပါတယ်!",
         parse_mode="Markdown"
     )
